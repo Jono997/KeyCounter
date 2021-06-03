@@ -10,9 +10,9 @@ namespace KeyCounter
 {
     public static class ConfigLoader
     {
-        public static string Save(Config[] configs)
+        public static string Save(Config configs)
         {
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(Config[]));
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(Config));
             StringWriter stringWriter = new StringWriter();
             xmlSerializer.Serialize(stringWriter, configs);
             stringWriter.Flush();
@@ -20,11 +20,11 @@ namespace KeyCounter
             return stringWriter.ToString();
         }
 
-        public static Config[] Load(string xml)
+        public static Config Load(string xml)
         {
-            XmlSerializer xmlSerializer = new XmlSerializer(typeof(Config[]));
+            XmlSerializer xmlSerializer = new XmlSerializer(typeof(Config));
             StringReader stringReader = new StringReader(xml);
-            Config[] config = (Config[])xmlSerializer.Deserialize(stringReader);
+            Config config = (Config)xmlSerializer.Deserialize(stringReader);
             stringReader.Close();
             return config;
         }

@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Kennedy.ManagedHooks">
+      <HintPath>..\KeyCounter\Kennedy.ManagedHooks.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -52,11 +55,35 @@
     <Compile Include="ConfigControl.Designer.cs">
       <DependentUpon>ConfigControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="ConfigureCounterPositionForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConfigureCounterPositionForm.Designer.cs">
+      <DependentUpon>ConfigureCounterPositionForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ConfigureKeyForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ConfigureKeyForm.Designer.cs">
       <DependentUpon>ConfigureKeyForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ConfigurePollingRateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConfigurePollingRateForm.Designer.cs">
+      <DependentUpon>ConfigurePollingRateForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ConfigureCounterOpacityForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConfigureCounterOpacityForm.Designer.cs">
+      <DependentUpon>ConfigureCounterOpacityForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="CreditsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreditsForm.Designer.cs">
+      <DependentUpon>CreditsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -69,8 +96,20 @@
     <EmbeddedResource Include="ConfigControl.resx">
       <DependentUpon>ConfigControl.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ConfigureCounterOpacityForm.resx">
+      <DependentUpon>ConfigureCounterOpacityForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ConfigureCounterPositionForm.resx">
+      <DependentUpon>ConfigureCounterPositionForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ConfigureKeyForm.resx">
       <DependentUpon>ConfigureKeyForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ConfigurePollingRateForm.resx">
+      <DependentUpon>ConfigurePollingRateForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CreditsForm.resx">
+      <DependentUpon>CreditsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -105,9 +144,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Converting configs %28v1 to v2%29.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="ATEM.dll" />
+    <Content Include="ATEM.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

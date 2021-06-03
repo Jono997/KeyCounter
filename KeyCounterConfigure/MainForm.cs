@@ -15,6 +15,8 @@ namespace KeyCounter
     public partial class MainForm : Form
     {
         private List<ConfigControl> configControls;
+        private int polling_rate;
+        private double counter_opacity;
         private string filename;
         public bool changed;
         private Size tabPage_size;
@@ -25,23 +27,46 @@ namespace KeyCounter
             filename = null;
             changed = false;
             InitializeComponent();
+            InitialiseLocaleComponents();
             tabPage_size = exampleTabPage.Size;
             debugToolStripMenuItem.Visible = Debugger.IsAttached;
             newToolStripMenuItem_Click(null, null);
         }
 
-        private void load_config(Config[] configs)
+        public void InitialiseLocaleComponents()
+        {
+            Text = LocaleDialogue.Get("maintitle");
+            fileToolStripMenuItem.Text = LocaleDialogue.Get("menufile");
+            editToolStripMenuItem.Text = LocaleDialogue.Get("menuedit");
+            aboutToolStripMenuItem.Text = LocaleDialogue.Get("menuabout");
+            newToolStripMenuItem.Text = LocaleDialogue.Get("newconfig");
+            openToolStripMenuItem.Text = LocaleDialogue.Get("openconfig");
+            saveToolStripMenuItem.Text = LocaleDialogue.Get("saveconfig");
+            saveAsToolStripMenuItem.Text = LocaleDialogue.Get("saveconfigas");
+            quitToolStripMenuItem.Text = LocaleDialogue.Get("quit");
+            createNewCounterToolStripMenuItem.Text = LocaleDialogue.Get("newcounter");
+            removeCurrentCounterToolStripMenuItem.Text = LocaleDialogue.Get("removecounter");
+            editCounterOpacityToolStripMenuItem.Text = LocaleDialogue.Get("opacity");
+            editPollingRateToolStripMenuItem.Text = LocaleDialogue.Get("pollingrate");
+            testToolStripMenuItem.Text = LocaleDialogue.Get("testconfig");
+            creditsToolStripMenuItem.Text = LocaleDialogue.Get("credits");
+            changelogToolStripMenuItem.Text = LocaleDialogue.Get("changelog");
+        }
+
+        private void load_config(Config config)
         {
             configControls.Clear();
-            for (int i = 0; i < configs.Length; i++)
+            for (int i = 0; i < config.configs.Length; i++)
             {
-                make_ConfigControl(configs[i]);
+                make_ConfigControl((KeyCounterConfig)config.configs[i]);
             }
+            polling_rate = config.polling_rate;
+            counter_opacity = config.counter_opacity;
             refresh_configsTabControl();
             changed = false;
         }
 
-        private void make_ConfigControl(Config config)
+        private void make_ConfigControl(KeyCounterConfig config)
         {
             configControls.Add(new ConfigControl()
             {
@@ -66,11 +91,14 @@ namespace KeyCounter
 
         private void save_config(string path)
         {
-            Config[] saved_config = new Config[configControls.Count];
+            Config saved_config = new Config();
+            saved_config.configs = new KeyCounterConfig[configControls.Count];
             for (int i = 0; i < configControls.Count; i++)
             {
-                saved_config[i] = configControls[i].config;
+                saved_config.configs[i] = configControls[i].config;
             }
+            saved_config.polling_rate = polling_rate;
+            saved_config.counter_opacity = counter_opacity;
             string config_xml = ConfigLoader.Save(saved_config);
             File.WriteAllText(path, config_xml);
             changed = false;
@@ -81,7 +109,7 @@ namespace KeyCounter
         {
             if (!check_unsaved_changes())
             {
-                load_config(new Config[] { new Config() });
+                load_config(new Config());
                 filename = null;
             }
         }
@@ -109,7 +137,7 @@ namespace KeyCounter
         {
             if (changed)
             {
-                DialogResult dialogResult = MessageBox.Show("Save the current configuration?", "You have unsaved changes!", MessageBoxButtons.YesNoCancel);
+                DialogResult dialogResult = MessageBox.Show(LocaleDialogue.Get("unsavedchanges"), LocaleDialogue.Get("unsavedchangestitle"), MessageBoxButtons.YesNoCancel);
                 switch (dialogResult)
                 {
                     case DialogResult.Yes:
@@ -158,7 +186,7 @@ namespace KeyCounter
 
         private void createNewCounterToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            make_ConfigControl(new Config());
+            make_ConfigControl(new KeyCounterConfig());
             refresh_configsTabControl();
             changed = true;
         }
@@ -171,7 +199,7 @@ namespace KeyCounter
         private void removeCurrentCounterToolStripMenuItem_Click(object sender, EventArgs e)
         {
             int i = configsTabControl.SelectedIndex;
-            if (MessageBox.Show("Are you sure you want to delete counter \"" + configsTabControl.SelectedTab.Text + "\"?", "Delete counter?", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show($"Are you sure you want to delete counter \"{configsTabControl.SelectedTab.Text}\"?", "Delete counter?", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 configControls.RemoveAt(i);
                 refresh_configsTabControl();
@@ -196,14 +224,9 @@ namespace KeyCounter
             this.filename = filename;
         }
 
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            
-        }
-
         private void creditsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("KeyCounter by Jono99\nPlease send any and all customer support inquiries to your nearest rubbish bin. Seriously, this program literally just counts keystrokes, what issues could you have?\nIn all seriousness, you can send support inquiries to Discord user Jono99#9105.", "KeyCounter v2");
+            new CreditsForm().ShowDialog();
         }
 
         private void changelogToolStripMenuItem_Click(object sender, EventArgs e)
@@ -215,7 +238,36 @@ v2: - Separated editing and running configurations into separate executables
 - Added counter position adjustment
 - Added counter names
 - Added GlobalCheckpoint and GlobalReset key roles
+v3: - Added counter colour and position customisation
+- Added multiple trigger types
+- Added increment/decrement rates for those key roles
+- Added the ability to change a counter's colour and position
+- Added counter opacity (applies to all counters)
+- Added a warning when running a config that has no exit role usage
+- Setting a key to an action now no longer accepts keys KeyCounter can't use
+- Added tooltips
+- Added text file that stores most text (used for translating)
 ", "KeyCounter changelog");
+        }
+
+        private void editPollingRateToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ConfigurePollingRateForm configureForm = new ConfigurePollingRateForm(polling_rate);
+            if (configureForm.ShowDialog() == DialogResult.OK)
+            {
+                polling_rate = configureForm.polling_rate;
+                changed = true;
+            }
+        }
+
+        private void editCounterOpacityToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ConfigureCounterOpacityForm configureForm = new ConfigureCounterOpacityForm(counter_opacity);
+            if (configureForm.ShowDialog() == DialogResult.OK)
+            {
+                counter_opacity = configureForm.Opacity;
+                changed = true;
+            }
         }
     }
 }

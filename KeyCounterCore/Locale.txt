@@ -1,0 +1,64 @@
+﻿ok: OK
+cancel: Cancel
+
+maintitle: KeyCounter configuration
+menufile: File
+menuedit: Edit
+menuabout: About
+newconfig: New
+openconfig: Open
+saveconfig: Save
+saveconfigas: Save As...
+quit: Quit
+newcounter: Create new counter
+removecounter: Create new counter
+opacity: Edit counter opacity
+pollingrate: Edit polling rate
+testconfig: Test
+credits: Credits
+changelog: Changelog
+unsavedchanges: Save the current configuration?
+unsavedchangestitle: You have unsaved changes!
+
+nametooltip: Counter name
+keystooltip: All keys assigned to this counter
+addkey: Add
+addkeytooltip: Assign a new key to this counter
+modifykey: Modify
+modifykeytooltip: Edit the currently selected key assignment
+removekey: Remove
+removekeytooltip: Remove the currently selected key assignment
+startvalue: Counter starting value:
+startvaluetooltip: The value the counter starts at
+position: Counter position: {0}, {1}
+positiontooltip: Where the counter appears
+configureposition: Configure
+colour: Counter colour:
+colourtooltip: The colour of the counter
+configurecolour: Configure
+testcounter: Test
+testcountertooltip: Run this counter to check if it works correctly
+
+keytitle: Configure key
+keylabel: Key
+triggerlabel: Trigger
+triggertooltip: What specifically triggers this key\nKeyDown: Triggers the moment the key is pressed down\nKeyHeld: Triggers every couple of milliseconds the key is held down\nKeyUp: Triggers the moment the key is lifted\nLegacy: Behaviour prior to v3. Similar to KeyHold, but with a delay to it
+actionlabel: Action
+actiontooltip: What happens when triggered\nIncrement: Increase the counter value\nDecrement: Decrease the counter value:\nReset Set the counter to 0 or the last local checkpoint\nExit: Closes KeyCounter\nCheckpoint: Sets the local checkpoint to the current counter value\nGlobalReset: Sets the counter to 0 or the last global checkpoint\nGlobalCheckpoint: Sets the global checkpoint to the current value of all counters
+incrementamountlabel: Amount
+incrementamounttooltip: How much the counter increments by when triggered
+decrementamountlabel: Amount
+decrementamounttooltip: How much the counter decrements by when triggered
+
+opacitytitle: Configure counter opacity
+
+pollingratetitle: Configure polling rate
+pollingratelabel: Polling rate
+pollingratedemonstrate: Demonstrate
+pollingratedemonstratetooltip: Show a visualisation of how fast the polling rate you've set is.
+
+noexit: This configuration does not have an exit command assigned. To exit this counter, you will need to force close KeyCounter through Task Manager.\nRun this configuration anyway?
+noexittitle: No exit
+noconfig: No configuration found. Please create one via the configuration tool.
+
+translationcredit: Translation by Jono99

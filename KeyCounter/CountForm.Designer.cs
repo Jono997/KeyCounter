@@ -28,7 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            this.keyPressTimer = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
+            // 
+            // keyPressTimer
+            // 
+            this.keyPressTimer.Tick += new System.EventHandler(this.keyPressTimer_Tick);
             // 
             // CountForm
             // 
@@ -37,6 +43,7 @@
             this.ClientSize = new System.Drawing.Size(1386, 788);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "CountForm";
+            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.TopMost = true;
             this.TransparencyKey = System.Drawing.SystemColors.Control;
@@ -46,5 +53,7 @@
         }
 
         #endregion
+
+        private System.Windows.Forms.Timer keyPressTimer;
     }
 }

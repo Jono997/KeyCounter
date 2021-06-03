@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("KeyCounterCore")]
-[assembly: AssemblyDescription("Core library for Key Counter")]
+[assembly: AssemblyDescription("Core library for KeyCounter")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("KeyCounter")]

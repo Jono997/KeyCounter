@@ -15,18 +15,17 @@ namespace KeyCounter
 {
     public partial class ConfigControl : UserControl
     {
-        public Config config
+        public KeyCounterConfig config
         {
             get
             {
                 _config.name = nameTextBox.Text;
                 _config.keys = keys.ToArray();
                 _config.counter_start = Convert.ToInt32(counter_startNumericUpDown.Value);
-                _config.counter_position = new Point(Convert.ToInt32(counter_position_xNumericUpDown.Value), Convert.ToInt32(counter_position_yNumericUpDown.Value));
                 return _config;
             }
         }
-        private Config _config;
+        private KeyCounterConfig _config;
         private List<Key> keys;
         private MainForm parent;
         private bool changed
@@ -42,23 +41,50 @@ namespace KeyCounter
             _config = null;
             keys = null;
             InitializeComponent();
+            InitialiseLocaleComponents();
         }
 
-        public void Setup(MainForm self, Config config)
+        private void InitialiseLocaleComponents()
+        {
+            toolTip1.SetToolTip(nameTextBox, LocaleDialogue.Get("nametooltip"));
+            toolTip1.SetToolTip(keysListBox, LocaleDialogue.Get("keystooltip"));
+            addButton.Text = LocaleDialogue.Get("addkey");
+            toolTip1.SetToolTip(addButton, LocaleDialogue.Get("addkeytooltip"));
+            modifyButton.Text = LocaleDialogue.Get("modifykey");
+            toolTip1.SetToolTip(modifyButton, LocaleDialogue.Get("modifykeytooltip"));
+            removeButton.Text = LocaleDialogue.Get("removekey");
+            toolTip1.SetToolTip(removeButton, LocaleDialogue.Get("removekeytooltip"));
+            counter_startLabel.Text = LocaleDialogue.Get("startvalue");
+            toolTip1.SetToolTip(counter_startLabel, LocaleDialogue.Get("startvaluetooltip"));
+            toolTip1.SetToolTip(counter_startNumericUpDown, LocaleDialogue.Get("startvaluetooltip"));
+            toolTip1.SetToolTip(counter_positionLabel, LocaleDialogue.Get("positiontooltip"));
+            toolTip1.SetToolTip(counter_positionButton, LocaleDialogue.Get("positiontooltip"));
+            counter_positionButton.Text = LocaleDialogue.Get("configureposition");
+            counter_colourLabel.Text = LocaleDialogue.Get("colour");
+            toolTip1.SetToolTip(counter_colourLabel, LocaleDialogue.Get("colourtooltip"));
+            toolTip1.SetToolTip(counter_colourPanel, LocaleDialogue.Get("colourtooltip"));
+            toolTip1.SetToolTip(counter_colourButton, LocaleDialogue.Get("colourtooltip"));
+            counter_colourButton.Text = LocaleDialogue.Get("configurecolour");
+            testButton.Text = LocaleDialogue.Get("testcounter");
+            toolTip1.SetToolTip(testButton, LocaleDialogue.Get("testcountertooltip"));
+        }
+
+        public void Setup(MainForm self, KeyCounterConfig config)
         {
             parent = self;
             _config = config;
             keys = config.keys.ToList();
-            nameTextBox.Text = _config.name;
+            nameTextBox.Text = config.name;
             refresh_keysListBox();
-            counter_startNumericUpDown.Value = _config.counter_start;
-            counter_position_xNumericUpDown.Value = _config.counter_position.X;
-            counter_position_yNumericUpDown.Value = _config.counter_position.Y;
+            counter_startNumericUpDown.Value = config.counter_start;
+            counter_positionLabel.Text = LocaleDialogue.Get("position", config.counter_position.X, config.counter_position.Y);
             nameTextBox.TextChanged += nameTextBox_TextChanged;
+            counter_colourPanel.BackColor = config.counter_colour.toColor();
         }
 
         private void refresh_keysListBox()
         {
+            int index = keysListBox.SelectedIndex;
             keysListBox.Items.Clear();
             for (int i = 0; i < keys.Count; i++)
             {
@@ -80,9 +106,37 @@ namespace KeyCounter
                     case Key.KeyAction.Exit:
                         prefix = "EXT";
                         break;
+                    case Key.KeyAction.GlobalCheckpoint:
+                        prefix = "GCP";
+                        break;
+                    case Key.KeyAction.GlobalReset:
+                        prefix = "GRS";
+                        break;
                 }
-                keysListBox.Items.Add(prefix + ": " + keys[i].keyChar.ToString());
+                if (Key.UsesActionValue.Contains(keys[i].action))
+                    prefix += $" {keys[i].actionValue}";
+
+                string suffix = "";
+                switch (keys[i].trigger)
+                {
+                    case Key.KeyTrigger.KeyDown:
+                        suffix = "DWN";
+                        break;
+                    case Key.KeyTrigger.KeyUp:
+                        suffix = "UP";
+                        break;
+                    case Key.KeyTrigger.KeyHeld:
+                        suffix = "HLD";
+                        break;
+                    case Key.KeyTrigger.Legacy:
+                        suffix = "OLD";
+                        break;
+                }
+
+                keysListBox.Items.Add($"{prefix}: {keys[i].keyChar} - {suffix}");
             }
+            keysListBox.SelectedIndex = index >= keysListBox.Items.Count ? -1 : index;
+            keysListBox_SelectedIndexChanged(null, null);
         }
 
         private void addButton_Click(object sender, EventArgs e)
@@ -121,7 +175,7 @@ namespace KeyCounter
 
         private void testButton_Click(object sender, EventArgs e)
         {
-            string text_xml = ConfigLoader.Save(new Config[] { config });
+            string text_xml = ConfigLoader.Save(new Config( new KeyCounterConfig[] { config }));
             string temp_file = Path.GetTempFileName();
             File.WriteAllText(temp_file, text_xml);
             Process process = new Process()
@@ -137,6 +191,27 @@ namespace KeyCounter
         {
             parent.refresh_tabPage_name(nameTextBox.Text);
             changed = true;
+        }
+
+        private void counter_positionButton_Click(object sender, EventArgs e)
+        {
+            ConfigureCounterPositionForm configureForm = new ConfigureCounterPositionForm(config.counter_position, config.name);
+            if (configureForm.ShowDialog() == DialogResult.OK)
+            {
+                config.counter_position = configureForm.counter_position;
+                counter_positionLabel.Text = LocaleDialogue.Get("position", config.counter_position.X, config.counter_position.Y);
+                changed = true;
+            }
+        }
+
+        private void counter_colourButton_Click(object sender, EventArgs e)
+        {
+            if (colorDialog1.ShowDialog() == DialogResult.OK)
+            {
+                counter_colourPanel.BackColor = colorDialog1.Color;
+                config.counter_colour = new RGB(colorDialog1.Color);
+                changed = true;
+            }
         }
     }
 }

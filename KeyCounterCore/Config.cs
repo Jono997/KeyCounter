@@ -3,29 +3,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.IO;
-using System.Xml.Serialization;
-using System.Drawing;
 
 namespace KeyCounter
 {
     public class Config
     {
-        public Key[] keys { get; set; }
-        public string name { get; set; }
-        public int counter_start { get; set; }
-        public Point counter_position { get; set; }
+        public CounterConfigBase[] configs { get; set; }
+        public int polling_rate { get; set; }
+        public double counter_opacity { get; set; }
 
         public Config()
         {
-            keys = new Key[] { new Key(System.Windows.Forms.Keys.K, Key.KeyAction.Increment),
-                               new Key(System.Windows.Forms.Keys.F, Key.KeyAction.Increment),
-                               new Key(System.Windows.Forms.Keys.R, Key.KeyAction.Reset),
-                               new Key(System.Windows.Forms.Keys.Pause, Key.KeyAction.Exit)
-                             };
-            name = "Name";
-            counter_start = 0;
-            counter_position = new Point(12, 9);
+            configs = new CounterConfigBase[] { new KeyCounterConfig() };
+            polling_rate = 50;
+            counter_opacity = 1;
+        }
+
+        public Config(KeyCounterConfig[] configs) : this()
+        {
+            this.configs = new CounterConfigBase[configs.Length];
+            Array.Copy(configs, this.configs, configs.Length);
+        }
+
+        public bool hasExit()
+        {
+            foreach (KeyCounterConfig counterConfig in configs)
+                foreach (Key key in counterConfig.keys)
+                    if (key.action == Key.KeyAction.Exit)
+                        return true;
+            return false;
         }
     }
 }
