@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Key_counter.Properties
+namespace KeyCounter.Properties
 {
 
 

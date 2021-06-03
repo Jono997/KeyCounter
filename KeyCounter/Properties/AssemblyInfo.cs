@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Key_counter")]
+[assembly: AssemblyTitle("KeyCounter")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Key_counter")]
+[assembly: AssemblyProduct("KeyCounter")]
 [assembly: AssemblyCopyright("Copyright ©  2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("758d1b73-991f-4e2f-a835-cdd653cd447a")]
+[assembly: Guid("69549fd6-c4fc-45f4-8b2a-9c576bca8d24")]
 
 // Version information for an assembly consists of the following four values:
 //

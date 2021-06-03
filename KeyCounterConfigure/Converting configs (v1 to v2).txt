@@ -1,0 +1,5 @@
+To convert a configuration from v1 to v2, open the configuration in a text editor (eg. Notepad)
+Step 1. Find the line starting with "<Config" and change it to start with "<ArrayOfConfig"
+Step 2. Add a new line directly after the line you just changed with the text "<Config>"
+Step 3. Add a new line at the very end of the file with the text "</ArrayOfConfig>"
+Step 4. Save the configuration file and load it up. It should work.

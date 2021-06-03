@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Key_counter
+namespace KeyCounter
 {
     public class Key
     {
@@ -19,7 +19,9 @@ namespace Key_counter
             Decrement,
             Reset,
             Exit,
-            Checkpoint
+            Checkpoint,
+            GlobalReset,
+            GlobalCheckpoint
         }
 
         public Key()
@@ -32,6 +34,11 @@ namespace Key_counter
         {
             this.keyChar = keyChar;
             this.action = action;
+        }
+
+        public Key Clone()
+        {
+            return new Key(keyChar, action);
         }
     }
 }

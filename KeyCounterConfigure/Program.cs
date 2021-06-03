@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Key_counter
+namespace KeyCounter
 {
     static class Program
     {
@@ -16,9 +16,7 @@ namespace Key_counter
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            OptionsForm options = new OptionsForm();
-            options.ShowDialog();
-            new CountForm(options.config).ShowDialog();
+            Application.Run(new MainForm());
         }
     }
 }
